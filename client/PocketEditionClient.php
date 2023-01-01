@@ -416,7 +416,7 @@ class PocketEditionClient extends UDPServerSocket
 	public function sendOpenConnectionRequest1(): void
 	{
 		$pk = new OpenConnectionRequest1();
-		$pk->protocol = 6;
+		$pk->protocol = 8;
 		$pk->mtuSize = self::MTU - 28;
 		$this->sendRakNetPacket($pk);
 	}
