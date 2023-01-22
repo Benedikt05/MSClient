@@ -14,20 +14,25 @@ class PlayerActionPacket extends DataPacket{
 	public const ACTION_STOP_BREAK = 2;
 
 
-	public const ACTION_RELEASE_ITEM = 5;
-	public const ACTION_STOP_SLEEPING = 6;
-	public const ACTION_RESPAWN = 7;
-	public const ACTION_JUMP = 8;
-	public const ACTION_START_SPRINT = 9;
-	public const ACTION_STOP_SPRINT = 10;
-	public const ACTION_START_SNEAK = 11;
-	public const ACTION_STOP_SNEAK = 12;
-	public const ACTION_DIMENSION_CHANGE = 13; //TODO: correct these
+	const ACTION_GET_UPDATED_BLOCK = 3;
+	const ACTION_DROP_ITEM = 4;
+	const ACTION_STOP_SLEEPING = 5;
+	const ACTION_RESPAWN = 6;
+	const ACTION_JUMP = 7;
+	const ACTION_START_SPRINT = 8;
+	const ACTION_STOP_SPRINT = 9;
+	const ACTION_START_SNEAK = 10;
+	const ACTION_STOP_SNEAK = 11;
+	const ACTION_DIMENSION_CHANGE_REQUEST = 12; //sent when dying in different dimension
+	const ACTION_DIMENSION_CHANGE_ACK = 13; //sent when spawning in a different dimension to tell the server we spawned
+	const ACTION_START_GLIDE = 14;
+	const ACTION_STOP_GLIDE = 15;
+	const ACTION_BUILD_DENIED = 16;
+	const ACTION_CONTINUE_BREAK = 17;
 
-	public const ACTION_START_GLIDE = 15;
-	public const ACTION_STOP_GLIDE = 16;
-	public const ACTION_BUILD_DENIED = 17;
-	public const ACTION_CONTINUE_BREAK = 18;
+	const ACTION_SET_ENCHANTMENT_SEED = 19;
+
+	const ACTION_RELEASE_ITEM = 99999; //TODO REMOVE
 
 	public $entityRuntimeId;
 	public $action;
