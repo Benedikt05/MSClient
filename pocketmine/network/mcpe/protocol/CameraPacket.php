@@ -23,19 +23,19 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class CameraPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::CAMERA_PACKET;
+	public const NETWORK_ID = ProtocolInfo::CAMERA_PACKET;
 
 	/** @var int */
 	public $cameraUniqueId;
 	/** @var int */
 	public $playerUniqueId;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->cameraUniqueId = $this->getEntityUniqueId();
 		$this->playerUniqueId = $this->getEntityUniqueId();
 	}

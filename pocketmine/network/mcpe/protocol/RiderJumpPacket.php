@@ -24,17 +24,18 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class RiderJumpPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::RIDER_JUMP_PACKET;
+	public const NETWORK_ID = ProtocolInfo::RIDER_JUMP_PACKET;
 
+	/** @var int */
 	public $unknown;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->unknown = $this->getVarInt();
 	}
 

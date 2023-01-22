@@ -23,36 +23,31 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
-use client\Client;
 use pocketmine\network\mcpe\NetworkSession;
 
 class AnimatePacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::ANIMATE_PACKET;
+	public const NETWORK_ID = ProtocolInfo::ANIMATE_PACKET;
 
-	const ACTION_SWING_ARM = 1;
+	public const ACTION_SWING_ARM = 1;
 
-	const ACTION_STOP_SLEEP = 3;
-	const ACTION_CRITICAL_HIT = 4;
+	public const ACTION_STOP_SLEEP = 3;
+	public const ACTION_CRITICAL_HIT = 4;
 
+	/** @var int */
 	public $action;
+	/** @var int */
 	public $entityRuntimeId;
+	/** @var float */
 	public $float = 0.0; //TODO (Boat rowing time?)
 
-	public function decodePayload(){
-		if (Client::STEADFAST2) {
-			// https://github.com/Hydreon/Steadfast2/blob/7b5775cb60edeedf1b91a62d1faef514fda13e22/src/pocketmine/network/protocol/AnimatePacket.php#L48
-			$this->action = $this->getSignedVarInt();
-			$this->entityRuntimeId = $this->getVarInt();
-//			$this->isClick = $this->getLFloat();
-			return;
-		}
+	protected function decodePayload(){
 		$this->action = $this->getVarInt();
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
 		if($this->action & 0x80){
-			$this->float = $this->getLFloat();
+			$this->float = ((\unpack("g", $this->get(4))[1]));
 		}
 	}
 
@@ -60,7 +55,7 @@ class AnimatePacket extends DataPacket{
 		$this->putVarInt($this->action);
 		$this->putEntityRuntimeId($this->entityRuntimeId);
 		if($this->action & 0x80){
-			$this->putLFloat($this->float);
+			($this->buffer .= (\pack("g", $this->float)));
 		}
 	}
 

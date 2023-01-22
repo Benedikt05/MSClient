@@ -20,8 +20,7 @@ class LoginPacket extends DataPacket{
 	public $skin;
 
 	function encodePayload() : void{
-		$this->putInt(113);
-		$this->putByte(0);
+		$this->putInt(\pocketmine\network\mcpe\protocol\ProtocolInfo::CURRENT_PROTOCOL);
 		$stream = new DataPacketBinaryStream();
 		$header = [
 			"alg" => "ES384",
@@ -50,7 +49,7 @@ class LoginPacket extends DataPacket{
 			$header,
 			[
 				"ADRole" => 2,
-				"ClientRandomId" => rand(),
+				"ClientRandomId" => mt_rand(),
 				"CurrentInputMode" => 2,
 				"DefaultInputMode" => 2,
 				"DeviceModel" => "iPhone10,4",

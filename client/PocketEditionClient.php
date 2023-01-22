@@ -787,7 +787,7 @@ class PocketEditionClient extends UDPServerSocket
 			$player = $this->getPlayer();
 			$player->setId($packet->entityRuntimeId);
 			$player->setGamemode($packet->playerGamemode);
-			$player->setLocation($packet->x, $packet->y, $packet->z, $packet->yaw, $packet->pitch);
+			$player->setLocation($packet->playerPosition->getX(), $packet->playerPosition->getY(), $packet->playerPosition->getZ(), $packet->yaw, $packet->pitch);
 		} elseif ($packet instanceof UpdateAttributesPacket) {
 			$player = $this->player;
 			if ($player->getId() === $packet->entityRuntimeId) {
@@ -898,13 +898,13 @@ class PocketEditionClient extends UDPServerSocket
 				FullChunkDataPacket::NETWORK_ID, SetTimePacket::NETWORK_ID, BlockEntityDataPacket::NETWORK_ID,
 				PlayerListPacket::NETWORK_ID, SetEntityDataPacket::NETWORK_ID, AddPlayerPacket::NETWORK_ID,
 				RemoveEntityPacket::NETWORK_ID, MovePlayerPacket::NETWORK_ID, MoveEntityPacket::NETWORK_ID,
-				LevelSoundEventPacket::NETWORK_ID, PlayerActionPacket::NETWORK_ID, InventoryActionPacket::NETWORK_ID,
+				LevelSoundEventPacket::NETWORK_ID, PlayerActionPacket::NETWORK_ID,
 				EntityEventPacket::NETWORK_ID, AnimatePacket::NETWORK_ID,
 				SetEntityMotionPacket::NETWORK_ID, LevelEventPacket::NETWORK_ID, UpdateBlockPacket::NETWORK_ID,
 				MobArmorEquipmentPacket::NETWORK_ID, AddItemEntityPacket::NETWORK_ID, BlockEventPacket::NETWORK_ID,
 				SetEntityLinkPacket::NETWORK_ID, MobEquipmentPacket::NETWORK_ID, AddEntityPacket::NETWORK_ID,
-				AvailableCommandsPacket::NETWORK_ID, MobEffectPacket::NETWORK_ID, ContainerSetSlotPacket::NETWORK_ID,
-				ContainerSetDataPacket::NETWORK_ID, ContainerSetContentPacket::NETWORK_ID, BossEventPacket::NETWORK_ID,
+				AvailableCommandsPacket::NETWORK_ID, MobEffectPacket::NETWORK_ID,
+				ContainerSetDataPacket::NETWORK_ID, BossEventPacket::NETWORK_ID,
 				ChunkRadiusUpdatedPacket::NETWORK_ID, // spammed this on core
 			])) {
 			return;
@@ -971,7 +971,6 @@ class PocketEditionClient extends UDPServerSocket
 
 		$pk = new \protocol\TextPacket();
 		$pk->type = \protocol\TextPacket::TYPE_CHAT;
-		$pk->source = '';
 		$pk->message = $message;
 		$this->sendDataPacket($pk);
 	}

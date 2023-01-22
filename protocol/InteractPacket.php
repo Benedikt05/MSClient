@@ -20,21 +20,29 @@ class InteractPacket extends DataPacket{
 
 	public $action;
 	public $target;
+	private $y = 0;
+	private $x = 0;
+	private $z = 0;
 
 	function decodePayload() : void{
 		$this->action = $this->getByte();
 		$this->target = $this->getEntityRuntimeId();
+
+		if($this->action === self::ACTION_MOUSEOVER){
+			$this->x = $this->getLFloat();
+			$this->y = $this->getLFloat();
+			$this->z = $this->getLFloat();
+		}
 	}
 
 	function encodePayload() : void{
-		if (Client::STEADFAST2) {
-			// todo: not work
-//			$this->encodeHeaderSF2();
-			$this->putByte($this->action);
-			$this->putVarInt($this->action);
-			return;
-		}
 		$this->putByte($this->action);
 		$this->putEntityRuntimeId($this->target);
+
+		if($this->action === self::ACTION_MOUSEOVER){
+			$this->putLFloat($this->x);
+			$this->putLFloat($this->y);
+			$this->putLFloat($this->z);
+		}
 	}
 }

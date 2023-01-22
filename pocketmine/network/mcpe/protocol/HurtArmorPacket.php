@@ -23,17 +23,18 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class HurtArmorPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
+	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
 
+	/** @var int */
 	public $health;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->health = $this->getVarInt();
 	}
 

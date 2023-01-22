@@ -23,19 +23,19 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class ClientToServerHandshakePacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::CLIENT_TO_SERVER_HANDSHAKE_PACKET;
+	public const NETWORK_ID = ProtocolInfo::CLIENT_TO_SERVER_HANDSHAKE_PACKET;
 
 	public function canBeSentBeforeLogin() : bool{
-		return true;
+		return \true;
 	}
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		//No payload
 	}
 

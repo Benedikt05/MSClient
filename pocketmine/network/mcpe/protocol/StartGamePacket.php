@@ -23,147 +23,177 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
-use client\Client;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 
 class StartGamePacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::START_GAME_PACKET;
+	public const NETWORK_ID = ProtocolInfo::START_GAME_PACKET;
 
+	/** @var int */
 	public $entityUniqueId;
+	/** @var int */
 	public $entityRuntimeId;
+	/** @var int */
 	public $playerGamemode;
-	public $x;
-	public $y;
-	public $z;
+
+	/** @var Vector3 */
+	public $playerPosition;
+
+	/** @var float */
 	public $pitch;
+	/** @var float */
 	public $yaw;
+
+	/** @var int */
 	public $seed;
+	/** @var int */
 	public $dimension;
+	/** @var int */
 	public $generator = 1; //default infinite - 0 old, 1 infinite, 2 flat
+	/** @var int */
 	public $worldGamemode;
+	/** @var int */
 	public $difficulty;
+	/** @var int */
 	public $spawnX;
+	/** @var int*/
 	public $spawnY;
+	/** @var int */
 	public $spawnZ;
-	public $hasAchievementsDisabled = true;
-	public $dayCycleStopTime = -1; //-1 = not stopped, any positive value = stopped at that time
-	public $eduMode = false;
+	/** @var bool */
+	public $hasAchievementsDisabled = \true;
+	/** @var int */
+	public $time = -1;
+	/** @var bool */
+	public $eduMode = \false;
+	/** @var float */
 	public $rainLevel;
+	/** @var float */
 	public $lightningLevel;
+	/** @var bool */
+	public $isMultiplayerGame = \true;
+	/** @var bool */
+	public $hasLANBroadcast = \true;
+	/** @var bool */
+	public $hasXboxLiveBroadcast = \false;
+	/** @var bool */
 	public $commandsEnabled;
-	public $isTexturePacksRequired = true;
+	/** @var bool */
+	public $isTexturePacksRequired = \true;
+	/** @var array */
 	public $gameRules = []; //TODO: implement this
+	/** @var bool */
+	public $hasBonusChestEnabled = \false;
+	/** @var bool */
+	public $hasStartWithMapEnabled = \false;
+	/** @var bool */
+	public $hasTrustPlayersEnabled = \false;
+	/** @var int */
+	public $defaultPlayerPermission = PlayerPermissions::MEMBER; //TODO
+	/** @var int */
+	public $xboxLiveBroadcastMode = 0; //TODO: find values
+
+	/** @var string */
 	public $levelId = ""; //base64 string, usually the same as world folder name in vanilla
+	/** @var string */
 	public $worldName;
+	/** @var string */
 	public $premiumWorldTemplateId = "";
-	public $unknownBool = false;
+	/** @var bool */
+	public $unknownBool = \false;
+	/** @var int */
 	public $currentTick = 0;
+	/** @var int */
+	public $enchantmentSeed = 0;
 
-	public function decodePayload(){
-		if (Client::STEADFAST2) {
-			$this->decodeHeaderSF2();
-			// https://github.com/Hydreon/Steadfast2/blob/7b5775cb60edeedf1b91a62d1faef514fda13e22/src/pocketmine/network/protocol/StartGamePacket.php#L58
-
-			$this->entityRuntimeId = $this->getVarIntSF2(); // 1
-			$this->entityUniqueId = 0; // 0 (not read)
-
-			$this->playerGamemode = $this->getSignedVarIntSF2(); // 0
-
-			$this->x = $this->getLFloat(); // 0
-			$this->y = $this->getLFloat(); // 1.6200000047684
-			$this->z = $this->getLFloat(); // 0
-
-			$this->pitch = $this->getLFloat(); // 0 (static)
-			$this->yaw = $this->getLFloat(); // 0 (static)
-
-			// level settings
-
-			$this->seed = $this->getSignedVarIntSF2(); // -1
-			$this->dimension = $this->getSignedVarIntSF2(); // 0
-			$this->generator = $this->getSignedVarIntSF2(); // 1
-			$this->worldGamemode = $this->getSignedVarIntSF2(); // 0
-			$this->difficulty = $this->getSignedVarIntSF2(); // 1 (static)
-
-			// default spawn 3x VarInt
-			$this->spawnX = $this->getSignedVarIntSF2(); // 0
-			$this->spawnY = $this->getVarIntSF2(); // 1
-			$this->spawnZ = $this->getSignedVarIntSF2(); // 0
-
-			$this->hasAchievementsDisabled = $this->getBool(); // 1 (static)
-
-			// DayCycleStopTyme 1x VarInt
-			$this->dayCycleStopTime = $this->getSignedVarIntSF2(); // 0 (static)
-
-			$this->eduMode = $this->getBool(); // 0 (static)
-
-			$this->rainLevel = $this->getLFloat(); // 0 (static)
-			$this->lightningLevel = $this->getLFloat(); // 0 (static)
-
-			// commands enabled
-			$this->commandsEnabled = $this->getBool(); // 1 (static)
-
-			// isTexturepacksRequired 1x Byte
-			$this->isTexturePacksRequired = $this->getBool(); // 0 (static)
-			return;
-		}
-
+	protected function decodePayload(){
 		$this->entityUniqueId = $this->getEntityUniqueId();
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
 		$this->playerGamemode = $this->getVarInt();
-		$this->getVector3f($this->x, $this->y, $this->z);
-		$this->pitch = $this->getLFloat();
-		$this->yaw = $this->getLFloat();
+
+		$this->playerPosition = $this->getVector3Obj();
+
+		$this->pitch = ((\unpack("g", $this->get(4))[1]));
+		$this->yaw = ((\unpack("g", $this->get(4))[1]));
+
+		//Level settings
 		$this->seed = $this->getVarInt();
 		$this->dimension = $this->getVarInt();
 		$this->generator = $this->getVarInt();
 		$this->worldGamemode = $this->getVarInt();
 		$this->difficulty = $this->getVarInt();
 		$this->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-		$this->hasAchievementsDisabled = $this->getBool();
-		$this->dayCycleStopTime = $this->getVarInt();
-		$this->eduMode = $this->getBool();
-		$this->rainLevel = $this->getLFloat();
-		$this->lightningLevel = $this->getLFloat();
-		$this->commandsEnabled = $this->getBool();
-		$this->isTexturePacksRequired = $this->getBool();
+		$this->hasAchievementsDisabled = (($this->get(1) !== "\x00"));
+		$this->time = $this->getVarInt();
+		$this->eduMode = (($this->get(1) !== "\x00"));
+		$this->rainLevel = ((\unpack("g", $this->get(4))[1]));
+		$this->lightningLevel = ((\unpack("g", $this->get(4))[1]));
+		$this->isMultiplayerGame = (($this->get(1) !== "\x00"));
+		$this->hasLANBroadcast = (($this->get(1) !== "\x00"));
+		$this->hasXboxLiveBroadcast = (($this->get(1) !== "\x00"));
+		$this->commandsEnabled = (($this->get(1) !== "\x00"));
+		$this->isTexturePacksRequired = (($this->get(1) !== "\x00"));
 		$this->gameRules = $this->getGameRules();
+		$this->hasBonusChestEnabled = (($this->get(1) !== "\x00"));
+		$this->hasStartWithMapEnabled = (($this->get(1) !== "\x00"));
+		$this->hasTrustPlayersEnabled = (($this->get(1) !== "\x00"));
+		$this->defaultPlayerPermission = $this->getVarInt();
+		$this->xboxLiveBroadcastMode = $this->getVarInt();
+
 		$this->levelId = $this->getString();
 		$this->worldName = $this->getString();
 		$this->premiumWorldTemplateId = $this->getString();
-		$this->unknownBool = $this->getBool();
-		$this->currentTick = $this->getLLong();
+		$this->unknownBool = (($this->get(1) !== "\x00"));
+		$this->currentTick = (Binary::readLLong($this->get(8)));
 
+		$this->enchantmentSeed = $this->getVarInt();
 	}
 
 	public function encodePayload(){
 		$this->putEntityUniqueId($this->entityUniqueId);
 		$this->putEntityRuntimeId($this->entityRuntimeId);
 		$this->putVarInt($this->playerGamemode);
-		$this->putVector3f($this->x, $this->y, $this->z);
-		$this->putLFloat($this->pitch);
-		$this->putLFloat($this->yaw);
+
+		$this->putVector3Obj($this->playerPosition);
+
+		($this->buffer .= (\pack("g", $this->pitch)));
+		($this->buffer .= (\pack("g", $this->yaw)));
+
+		//Level settings
 		$this->putVarInt($this->seed);
 		$this->putVarInt($this->dimension);
 		$this->putVarInt($this->generator);
 		$this->putVarInt($this->worldGamemode);
 		$this->putVarInt($this->difficulty);
 		$this->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-		$this->putBool($this->hasAchievementsDisabled);
-		$this->putVarInt($this->dayCycleStopTime);
-		$this->putBool($this->eduMode);
-		$this->putLFloat($this->rainLevel);
-		$this->putLFloat($this->lightningLevel);
-		$this->putBool($this->commandsEnabled);
-		$this->putBool($this->isTexturePacksRequired);
+		($this->buffer .= ($this->hasAchievementsDisabled ? "\x01" : "\x00"));
+		$this->putVarInt($this->time);
+		($this->buffer .= ($this->eduMode ? "\x01" : "\x00"));
+		($this->buffer .= (\pack("g", $this->rainLevel)));
+		($this->buffer .= (\pack("g", $this->lightningLevel)));
+		($this->buffer .= ($this->isMultiplayerGame ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasLANBroadcast ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasXboxLiveBroadcast ? "\x01" : "\x00"));
+		($this->buffer .= ($this->commandsEnabled ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isTexturePacksRequired ? "\x01" : "\x00"));
 		$this->putGameRules($this->gameRules);
+		($this->buffer .= ($this->hasBonusChestEnabled ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasStartWithMapEnabled ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasTrustPlayersEnabled ? "\x01" : "\x00"));
+		$this->putVarInt($this->defaultPlayerPermission);
+		$this->putVarInt($this->xboxLiveBroadcastMode);
+
 		$this->putString($this->levelId);
 		$this->putString($this->worldName);
 		$this->putString($this->premiumWorldTemplateId);
-		$this->putBool($this->unknownBool);
-		$this->putLLong($this->currentTick);
+		($this->buffer .= ($this->unknownBool ? "\x01" : "\x00"));
+		($this->buffer .= (\pack("VV", $this->currentTick & 0xFFFFFFFF, $this->currentTick >> 32)));
+
+		$this->putVarInt($this->enchantmentSeed);
 	}
 
 	public function handle(NetworkSession $session) : bool{

@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
@@ -32,16 +32,17 @@ use pocketmine\resourcepacks\ResourcePack;
 use pocketmine\resourcepacks\ResourcePackInfoEntry;
 
 class ResourcePackStackPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_STACK_PACKET;
+	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_STACK_PACKET;
 
-	public $mustAccept = false;
+	/** @var bool */
+	public $mustAccept = \false;
 
 	/** @var ResourcePack[] */
 	public $behaviorPackStack = [];
 	/** @var ResourcePack[] */
 	public $resourcePackStack = [];
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		/*$this->mustAccept = $this->getBool();
 		$behaviorPackCount = $this->getUnsignedVarInt();
 		while($behaviorPackCount-- > 0){
@@ -59,18 +60,20 @@ class ResourcePackStackPacket extends DataPacket{
 	}
 
 	public function encodePayload(){
-		$this->putBool($this->mustAccept);
+		($this->buffer .= ($this->mustAccept ? "\x01" : "\x00"));
 
-		$this->putUnsignedVarInt(count($this->behaviorPackStack));
+		$this->putUnsignedVarInt(\count($this->behaviorPackStack));
 		foreach($this->behaviorPackStack as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());
+			$this->putString(""); //TODO
 		}
 
-		$this->putUnsignedVarInt(count($this->resourcePackStack));
+		$this->putUnsignedVarInt(\count($this->resourcePackStack));
 		foreach($this->resourcePackStack as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());
+			$this->putString(""); //TODO
 		}
 	}
 

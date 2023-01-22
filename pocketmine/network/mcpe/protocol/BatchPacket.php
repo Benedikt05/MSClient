@@ -23,17 +23,14 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
-#ifndef COMPILE
-use pocketmine\utils\Binary;
-#endif
 use pocketmine\utils\BinaryStream;
 
 class BatchPacket extends DataPacket{
-	const NETWORK_ID = 0xfe;
+	public const NETWORK_ID = 0xfe;
 
 	/** @var string */
 	public $payload = "";
@@ -41,24 +38,33 @@ class BatchPacket extends DataPacket{
 	protected $compressionLevel = 7;
 
 	public function canBeBatched() : bool{
-		return false;
+		return \false;
 	}
 
 	public function canBeSentBeforeLogin() : bool{
-		return true;
+		return \true;
 	}
 
-	public function decodePayload(){
+	protected function decodeHeader(){
+		$pid = (\ord($this->get(1)));
+		\assert($pid === static::NETWORK_ID);
+	}
+
+	protected function decodePayload(){
 		$data = $this->getRemaining();
 		try{
-			$this->payload = zlib_decode($data, 1024 * 1024 * 64); //Max 64MB
+			$this->payload = \zlib_decode($data, 1024 * 1024 * 64); //Max 64MB
 		}catch(\ErrorException $e){ //zlib decode error
 			$this->payload = "";
 		}
 	}
 
+	protected function encodeHeader(){
+		($this->buffer .= \chr(static::NETWORK_ID));
+	}
+
 	public function encodePayload(){
-		$this->put(zlib_encode($this->payload, ZLIB_ENCODING_DEFLATE, $this->compressionLevel));
+		($this->buffer .= \zlib_encode($this->payload, ZLIB_ENCODING_DEFLATE, $this->compressionLevel));
 	}
 
 	/**
@@ -66,13 +72,13 @@ class BatchPacket extends DataPacket{
 	 */
 	public function addPacket(DataPacket $packet){
 		if(!$packet->canBeBatched()){
-			throw new \InvalidArgumentException(get_class($packet) . " cannot be put inside a BatchPacket");
+			throw new \InvalidArgumentException(\get_class($packet) . " cannot be put inside a BatchPacket");
 		}
 		if(!$packet->isEncoded){
 			$packet->encode();
 		}
 
-		$this->payload .= Binary::writeUnsignedVarInt(strlen($packet->buffer)) . $packet->buffer;
+		$this->payload .= Binary::writeUnsignedVarInt(\strlen($packet->buffer)) . $packet->buffer;
 	}
 
 	/**
@@ -92,24 +98,39 @@ class BatchPacket extends DataPacket{
 	public function setCompressionLevel(int $level){
 		$this->compressionLevel = $level;
 	}
+	public function decode(){
+		$this->offset = 1;
+		$this->decodePayload();
+	}
+
+	public function encode(){
+		$this->reset();
+		$this->encodePayload();
+		$this->isEncoded = true;
+	}
+
+	public function reset(){
+		$this->buffer = "\xfe";
+		$this->offset = 0;
+	}
 
 	public function handle(NetworkSession $session) : bool{
 		if($this->payload === ""){
-			return false;
+			return \false;
 		}
 
 		foreach($this->getPackets() as $buf){
-			$pk = PacketPool::getPacketById(ord($buf{0}));
+			$pk = PacketPool::getPacketById(\ord($buf{0}));
 
 			if(!$pk->canBeBatched()){
-				throw new \InvalidArgumentException("Received invalid " . get_class($pk) . " inside BatchPacket");
+				throw new \InvalidArgumentException("Received invalid " . \get_class($pk) . " inside BatchPacket");
 			}
 
 			$pk->setBuffer($buf, 1);
 			$session->handleDataPacket($pk);
 		}
 
-		return true;
+		return \true;
 	}
 
 }

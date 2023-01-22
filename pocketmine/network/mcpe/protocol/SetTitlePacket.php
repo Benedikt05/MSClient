@@ -24,28 +24,33 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class SetTitlePacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::SET_TITLE_PACKET;
+	public const NETWORK_ID = ProtocolInfo::SET_TITLE_PACKET;
 
-	const TYPE_CLEAR_TITLE = 0;
-	const TYPE_RESET_TITLE = 1;
-	const TYPE_SET_TITLE = 2;
-	const TYPE_SET_SUBTITLE = 3;
-	const TYPE_SET_ACTIONBAR_MESSAGE = 4;
-	const TYPE_SET_ANIMATION_TIMES = 5;
+	public const TYPE_CLEAR_TITLE = 0;
+	public const TYPE_RESET_TITLE = 1;
+	public const TYPE_SET_TITLE = 2;
+	public const TYPE_SET_SUBTITLE = 3;
+	public const TYPE_SET_ACTIONBAR_MESSAGE = 4;
+	public const TYPE_SET_ANIMATION_TIMES = 5;
 
+	/** @var int */
 	public $type;
+	/** @var string */
 	public $text = "";
+	/** @var int */
 	public $fadeInTime = 0;
+	/** @var int */
 	public $stayTime = 0;
+	/** @var int */
 	public $fadeOutTime = 0;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->type = $this->getVarInt();
 		$this->text = $this->getString();
 		$this->fadeInTime = $this->getVarInt();

@@ -35,10 +35,8 @@ class ChunkHelpers
 
 			$subChunkSize = $chunkSize / 2;
 			$data = $stream->get($subChunkSize); //data
-			$skyLight = $stream->get($subChunkSize); //sky light
-			$blockLight = $stream->get($subChunkSize); //block light
 
-			$subChunks[$s] = new SubChunk($ids, $data, $skyLight, $blockLight);
+			$subChunks[$s] = new SubChunk($ids, $data);
 		}
 
 		//todo: heightMap removed after v1.14

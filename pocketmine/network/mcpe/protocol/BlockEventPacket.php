@@ -23,30 +23,35 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class BlockEventPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::BLOCK_EVENT_PACKET;
+	public const NETWORK_ID = ProtocolInfo::BLOCK_EVENT_PACKET;
 
+	/** @var int */
 	public $x;
+	/** @var int */
 	public $y;
+	/** @var int */
 	public $z;
-	public $case1;
-	public $case2;
+	/** @var int */
+	public $eventType;
+	/** @var int */
+	public $eventData;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->case1 = $this->getVarInt();
-		$this->case2 = $this->getVarInt();
+		$this->eventType = $this->getVarInt();
+		$this->eventData = $this->getVarInt();
 	}
 
 	public function encodePayload(){
 		$this->putBlockPosition($this->x, $this->y, $this->z);
-		$this->putVarInt($this->case1);
-		$this->putVarInt($this->case2);
+		$this->putVarInt($this->eventType);
+		$this->putVarInt($this->eventData);
 	}
 
 	public function handle(NetworkSession $session) : bool{

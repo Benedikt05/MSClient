@@ -23,29 +23,30 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class ServerToClientHandshakePacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::SERVER_TO_CLIENT_HANDSHAKE_PACKET;
+	public const NETWORK_ID = ProtocolInfo::SERVER_TO_CLIENT_HANDSHAKE_PACKET;
 
-	public $publicKey;
-	public $serverToken;
+	/**
+	 * @var string
+	 * Server pubkey and token is contained in the JWT.
+	 */
+	public $jwt;
 
 	public function canBeSentBeforeLogin() : bool{
-		return true;
+		return \true;
 	}
 
-	public function decodePayload(){
-		$this->publicKey = $this->getString();
-		$this->serverToken = $this->getString();
+	protected function decodePayload(){
+		$this->jwt = $this->getString();
 	}
 
 	public function encodePayload(){
-		$this->putString($this->publicKey);
-		$this->putString($this->serverToken);
+		$this->putString($this->jwt);
 	}
 
 	public function handle(NetworkSession $session) : bool{

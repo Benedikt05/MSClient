@@ -23,34 +23,49 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class PlayStatusPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::PLAY_STATUS_PACKET;
+	public const NETWORK_ID = ProtocolInfo::PLAY_STATUS_PACKET;
 
-	const LOGIN_SUCCESS = 0;
-	const LOGIN_FAILED_CLIENT = 1;
-	const LOGIN_FAILED_SERVER = 2;
-	const PLAYER_SPAWN = 3;
-	const LOGIN_FAILED_INVALID_TENANT = 4;
-	const LOGIN_FAILED_VANILLA_EDU = 5;
-	const LOGIN_FAILED_EDU_VANILLA = 6;
+	public const LOGIN_SUCCESS = 0;
+	public const LOGIN_FAILED_CLIENT = 1;
+	public const LOGIN_FAILED_SERVER = 2;
+	public const PLAYER_SPAWN = 3;
+	public const LOGIN_FAILED_INVALID_TENANT = 4;
+	public const LOGIN_FAILED_VANILLA_EDU = 5;
+	public const LOGIN_FAILED_EDU_VANILLA = 6;
 
+	/** @var int */
 	public $status;
 
-	public function decodePayload(){
-		$this->status = $this->getInt();
+	/**
+	 * @var int
+	 * Used to determine how to write the packet when we disconnect incompatible clients.
+	 */
+	public $protocol;
+
+	protected function decodePayload(){
+		$this->status = ((\unpack("N", $this->get(4))[1] << 32 >> 32));
 	}
 
 	public function canBeSentBeforeLogin() : bool{
-		return true;
+		return \true;
+	}
+
+	protected function encodeHeader(){
+		if($this->protocol < 130){ //MCPE <= 1.1
+			($this->buffer .= \chr(static::NETWORK_ID));
+		}else{
+			parent::encodeHeader();
+		}
 	}
 
 	public function encodePayload(){
-		$this->putInt($this->status);
+		($this->buffer .= (\pack("N", $this->status)));
 	}
 
 	public function handle(NetworkSession $session) : bool{

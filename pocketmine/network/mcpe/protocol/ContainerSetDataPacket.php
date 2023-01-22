@@ -23,26 +23,39 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class ContainerSetDataPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::CONTAINER_SET_DATA_PACKET;
+	public const NETWORK_ID = ProtocolInfo::CONTAINER_SET_DATA_PACKET;
 
-	public $windowid;
+	public const PROPERTY_FURNACE_TICK_COUNT = 0;
+	public const PROPERTY_FURNACE_LIT_TIME = 1;
+	public const PROPERTY_FURNACE_LIT_DURATION = 2;
+	//TODO: check property 3
+	public const PROPERTY_FURNACE_FUEL_AUX = 4;
+
+	public const PROPERTY_BREWING_STAND_BREW_TIME = 0;
+	public const PROPERTY_BREWING_STAND_FUEL_AMOUNT = 1;
+	public const PROPERTY_BREWING_STAND_FUEL_TOTAL = 2;
+
+	/** @var int */
+	public $windowId;
+	/** @var int */
 	public $property;
+	/** @var int */
 	public $value;
 
-	public function decodePayload(){
-		$this->windowid = $this->getByte();
+	protected function decodePayload(){
+		$this->windowId = (\ord($this->get(1)));
 		$this->property = $this->getVarInt();
 		$this->value = $this->getVarInt();
 	}
 
 	public function encodePayload(){
-		$this->putByte($this->windowid);
+		($this->buffer .= \chr($this->windowId));
 		$this->putVarInt($this->property);
 		$this->putVarInt($this->value);
 	}

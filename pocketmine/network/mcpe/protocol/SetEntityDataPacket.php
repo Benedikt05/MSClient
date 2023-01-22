@@ -23,18 +23,20 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class SetEntityDataPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::SET_ENTITY_DATA_PACKET;
+	public const NETWORK_ID = ProtocolInfo::SET_ENTITY_DATA_PACKET;
 
+	/** @var int */
 	public $entityRuntimeId;
+	/** @var array */
 	public $metadata;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
 		$this->metadata = $this->getEntityMetadata();
 	}

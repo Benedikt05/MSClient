@@ -23,18 +23,24 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class AddHangingEntityPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::ADD_HANGING_ENTITY_PACKET;
+	public const NETWORK_ID = ProtocolInfo::ADD_HANGING_ENTITY_PACKET;
 
+	/** @var int */
 	public $entityUniqueId;
+	/** @var int */
 	public $entityRuntimeId;
+	/** @var int */
 	public $x;
+	/** @var int */
 	public $y;
+	/** @var int */
 	public $z;
+	/** @var int */
 	public $unknown; //TODO (rotation?)
 
 	public function decodePayload(){

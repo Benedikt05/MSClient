@@ -23,31 +23,37 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class UpdateBlockPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_PACKET;
+	public const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_PACKET;
 
-	const FLAG_NONE      = 0b0000;
-	const FLAG_NEIGHBORS = 0b0001;
-	const FLAG_NETWORK   = 0b0010;
-	const FLAG_NOGRAPHIC = 0b0100;
-	const FLAG_PRIORITY  = 0b1000;
+	public const FLAG_NONE      = 0b0000;
+	public const FLAG_NEIGHBORS = 0b0001;
+	public const FLAG_NETWORK   = 0b0010;
+	public const FLAG_NOGRAPHIC = 0b0100;
+	public const FLAG_PRIORITY  = 0b1000;
 
-	const FLAG_ALL = self::FLAG_NEIGHBORS | self::FLAG_NETWORK;
-	const FLAG_ALL_PRIORITY = self::FLAG_ALL | self::FLAG_PRIORITY;
+	public const FLAG_ALL = self::FLAG_NEIGHBORS | self::FLAG_NETWORK;
+	public const FLAG_ALL_PRIORITY = self::FLAG_ALL | self::FLAG_PRIORITY;
 
+	/** @var int */
 	public $x;
+	/** @var int */
 	public $z;
+	/** @var int */
 	public $y;
+	/** @var int */
 	public $blockId;
+	/** @var int */
 	public $blockData;
+	/** @var int */
 	public $flags;
 
-	public function decodePayload(){
+	protected function decodePayload(){
 		$this->getBlockPosition($this->x, $this->y, $this->z);
 		$this->blockId = $this->getUnsignedVarInt();
 		$aux = $this->getUnsignedVarInt();

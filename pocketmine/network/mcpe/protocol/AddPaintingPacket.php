@@ -23,22 +23,27 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 
 use pocketmine\network\mcpe\NetworkSession;
 
 class AddPaintingPacket extends DataPacket{
-	const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
+	public const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
 
 	/** @var int|null */
-	public $entityUniqueId = null; //TODO
+	public $entityUniqueId = \null; //TODO
 	/** @var int */
 	public $entityRuntimeId;
+	/** @var int */
 	public $x;
+	/** @var int */
 	public $y;
+	/** @var int */
 	public $z;
+	/** @var int */
 	public $direction;
+	/** @var string */
 	public $title;
 
 	public function decodePayload(){

@@ -39,6 +39,15 @@ class StartGamePacket extends DataPacket{
 	public $premiumWorldTemplateId = "";
 	public $unknownBool = false;
 	public $currentTick = 0;
+	private $isMultiplayerGame = true;
+	private $hasLANBroadcast = false;
+	private $hasXboxLiveBroadcast = false;
+	private $hasBonusChestEnabled = false;
+	private $hasStartWithMapEnabled = false;
+	private $hasTrustPlayersEnabled = false;
+	private $defaultPlayerPermission = 0;
+	private $xboxLiveBroadcastMode = 0;
+	private $unknownVarInt = 0;
 
 	public function decodePayload() : void{
 		$this->entityUniqueId = $this->getEntityUniqueId();
@@ -75,6 +84,7 @@ class StartGamePacket extends DataPacket{
 		$this->putVector3($this->playerPosition);
 		$this->putLFloat($this->pitch);
 		$this->putLFloat($this->yaw);
+		//Level settings
 		$this->putVarInt($this->seed);
 		$this->putVarInt($this->dimension);
 		$this->putVarInt($this->generator);
@@ -82,17 +92,26 @@ class StartGamePacket extends DataPacket{
 		$this->putVarInt($this->difficulty);
 		$this->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
 		$this->putBool($this->hasAchievementsDisabled);
-		$this->putVarInt($this->dayCycleStopTime);
+		$this->putVarInt(-1);
 		$this->putBool($this->eduMode);
 		$this->putLFloat($this->rainLevel);
 		$this->putLFloat($this->lightningLevel);
+		$this->putBool($this->isMultiplayerGame);
+		$this->putBool($this->hasLANBroadcast);
+		$this->putBool($this->hasXboxLiveBroadcast);
 		$this->putBool($this->commandsEnabled);
 		$this->putBool($this->isTexturePacksRequired);
-		//$this->putGameRules($this->gameRules);
-		//$this->putString($this->levelId);
-		//$this->putString($this->worldName);
-		//$this->putString($this->premiumWorldTemplateId);
-		//$this->putBool($this->unknownBool);
-		//$this->putLLong($this->currentTick);
+		$this->putGameRules($this->gameRules);
+		$this->putBool($this->hasBonusChestEnabled);
+		$this->putBool($this->hasStartWithMapEnabled);
+		$this->putBool($this->hasTrustPlayersEnabled);
+		$this->putVarInt($this->defaultPlayerPermission);
+		$this->putVarInt($this->xboxLiveBroadcastMode);
+		$this->putString($this->levelId);
+		$this->putString($this->worldName);
+		$this->putString($this->premiumWorldTemplateId);
+		$this->putBool($this->unknownBool);
+		$this->putLLong($this->currentTick);
+		$this->putVarInt($this->unknownVarInt);
 	}
 }

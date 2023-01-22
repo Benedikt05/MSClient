@@ -35,6 +35,27 @@ class AddPlayerPacket extends DataPacket{
 	public $item;
 	/** @var array */
 	public $metadata = [];
+	/**
+	 * @var int
+	 */
+	private $uvarint1 = 0;
+	/**
+	 * @var int
+	 */
+	private $uvarint2 = 0;
+	/**
+	 * @var int
+	 */
+	private $uvarint3 = 0;
+	/**
+	 * @var int
+	 */
+	private $uvarint4 = 0;
+	/**
+	 * @var int
+	 */
+	private $long1 = 0;
+	public $links;
 
 	public function decodePayload() : void{
 		$this->uuid = $this->getUUID();
@@ -48,6 +69,18 @@ class AddPlayerPacket extends DataPacket{
 		$this->yaw = $this->getLFloat();
 		$this->item = $this->getSlot();
 		$this->metadata = $this->getEntityMetadata();
+
+		$this->uvarint1 = $this->getUnsignedVarInt();
+		$this->uvarint2 = $this->getUnsignedVarInt();
+		$this->uvarint3 = $this->getUnsignedVarInt();
+		$this->uvarint4 = $this->getUnsignedVarInt();
+
+		$this->long1 = $this->getLLong();
+
+		$linkCount = $this->getUnsignedVarInt();
+		for($i = 0; $i < $linkCount; ++$i){
+			$this->links[$i] = $this->getEntityLink();
+		}
 	}
 
 	public function encodePayload() : void{
@@ -62,5 +95,17 @@ class AddPlayerPacket extends DataPacket{
 		$this->putLFloat($this->yaw);
 		$this->putSlot($this->item);
 		$this->putEntityMetadata($this->metadata);
+
+		$this->putUnsignedVarInt($this->uvarint1);
+		$this->putUnsignedVarInt($this->uvarint2);
+		$this->putUnsignedVarInt($this->uvarint3);
+		$this->putUnsignedVarInt($this->uvarint4);
+
+		$this->putLLong($this->long1);
+
+		$this->putUnsignedVarInt(count($this->links));
+		foreach($this->links as $link){
+			$this->putEntityLink($link);
+		}
 	}
 }
