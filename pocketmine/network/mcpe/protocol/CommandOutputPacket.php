@@ -75,7 +75,7 @@ class CommandOutputPacket extends DataPacket{
 		($this->buffer .= \chr($this->outputType));
 		$this->putUnsignedVarInt($this->successCount);
 
-		$this->putUnsignedVarInt(\count($this->messages));
+		$this->putUnsignedVarInt(count($this->messages));
 		foreach($this->messages as $message){
 			$this->putCommandMessage($message);
 		}
@@ -89,7 +89,7 @@ class CommandOutputPacket extends DataPacket{
 		($this->buffer .= ($message->isInternal ? "\x01" : "\x00"));
 		$this->putString($message->messageId);
 
-		$this->putUnsignedVarInt(\count($message->parameters));
+		$this->putUnsignedVarInt(count($message->parameters));
 		foreach($message->parameters as $parameter){
 			$this->putString($parameter);
 		}

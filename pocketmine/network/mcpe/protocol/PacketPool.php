@@ -25,7 +25,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 class PacketPool{
 	/** @var \SplFixedArray<DataPacket> */
-	protected static $pool = \null;
+	protected static $pool = null;
 
 	public static function init(){
 		static::$pool = new \SplFixedArray(256);

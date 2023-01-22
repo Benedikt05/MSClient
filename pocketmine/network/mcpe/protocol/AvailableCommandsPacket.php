@@ -134,11 +134,11 @@ class AvailableCommandsPacket extends DataPacket{
 	protected function putEnum(CommandEnum $enum){
 		$this->putString($enum->enumName);
 
-		$this->putUnsignedVarInt(\count($enum->enumValues));
+		$this->putUnsignedVarInt(count($enum->enumValues));
 		foreach($enum->enumValues as $value){
 			//Dumb bruteforce search. I hate this packet.
-			$index = \array_search($value, $this->enumValues, \true);
-			if($index === \false){
+			$index = \array_search($value, $this->enumValues, true);
+			if($index === false){
 				throw new \InvalidStateException("Enum value '$value' not found");
 			}
 			$this->putEnumValueIndex($index);
@@ -171,7 +171,7 @@ class AvailableCommandsPacket extends DataPacket{
 		$retval->commandDescription = $this->getString();
 		$retval->flags = (\ord($this->get(1)));
 		$retval->permission = (\ord($this->get(1)));
-		$retval->aliases = $this->enums[((\unpack("V", $this->get(4))[1] << 32 >> 32))] ?? \null;
+		$retval->aliases = $this->enums[((\unpack("V", $this->get(4))[1] << 32 >> 32))] ?? null;
 
 		for($overloadIndex = 0, $overloadCount = $this->getUnsignedVarInt(); $overloadIndex < $overloadCount; ++$overloadIndex){
 			for($paramIndex = 0, $paramCount = $this->getUnsignedVarInt(); $paramIndex < $paramCount; ++$paramIndex){
@@ -182,14 +182,14 @@ class AvailableCommandsPacket extends DataPacket{
 
 				if($parameter->paramType & self::ARG_FLAG_ENUM){
 					$index = ($parameter->paramType & 0xffff);
-					$parameter->enum = $this->enums[$index] ?? \null;
+					$parameter->enum = $this->enums[$index] ?? null;
 
-					\assert($parameter->enum !== \null, "expected enum at $index, but got none");
+					\assert($parameter->enum !== null, "expected enum at $index, but got none");
 				}elseif(($parameter->paramType & self::ARG_FLAG_VALID) === 0){ //postfix (guessing)
 					$index = ($parameter->paramType & 0xffff);
-					$parameter->postfix = $this->postfixes[$index] ?? \null;
+					$parameter->postfix = $this->postfixes[$index] ?? null;
 
-					\assert($parameter->postfix !== \null, "expected postfix at $index, but got none");
+					\assert($parameter->postfix !== null, "expected postfix at $index, but got none");
 				}
 
 				$retval->overloads[$overloadIndex][$paramIndex] = $parameter;
@@ -205,24 +205,24 @@ class AvailableCommandsPacket extends DataPacket{
 		($this->buffer .= \chr($data->flags));
 		($this->buffer .= \chr($data->permission));
 
-		if($data->aliases !== \null){
+		if($data->aliases !== null){
 			($this->buffer .= (\pack("V", $this->enumMap[$data->aliases->enumName] ?? -1)));
 		}else{
 			($this->buffer .= (\pack("V", -1)));
 		}
 
-		$this->putUnsignedVarInt(\count($data->overloads));
+		$this->putUnsignedVarInt(count($data->overloads));
 		foreach($data->overloads as $overload){
 			/** @var CommandParameter[] $overload */
-			$this->putUnsignedVarInt(\count($overload));
+			$this->putUnsignedVarInt(count($overload));
 			foreach($overload as $parameter){
 				$this->putString($parameter->paramName);
 
-				if($parameter->enum !== \null){
+				if($parameter->enum !== null){
 					$type = self::ARG_FLAG_ENUM | self::ARG_FLAG_VALID | ($this->enumMap[$parameter->enum->enumName] ?? -1);
-				}elseif($parameter->postfix !== \null){
-					$key = \array_search($parameter->postfix, $this->postfixes, \true);
-					if($key === \false){
+				}elseif($parameter->postfix !== null){
+					$key = \array_search($parameter->postfix, $this->postfixes, true);
+					if($key === false){
 						throw new \InvalidStateException("Postfix '$parameter->postfix' not in postfixes array");
 					}
 					$type = $parameter->paramType << 24 | $key;
@@ -281,11 +281,11 @@ class AvailableCommandsPacket extends DataPacket{
 		$postfixesMap = [];
 		$enumMap = [];
 		foreach($this->commandData as $commandData){
-			if($commandData->aliases !== \null){
+			if($commandData->aliases !== null){
 				$enumMap[$commandData->aliases->enumName] = $commandData->aliases;
 
 				foreach($commandData->aliases->enumValues as $str){
-					$enumValuesMap[$str] = \true;
+					$enumValuesMap[$str] = true;
 				}
 			}
 
@@ -295,40 +295,40 @@ class AvailableCommandsPacket extends DataPacket{
 				 * @var CommandParameter $parameter
 				 */
 				foreach($overload as $parameter){
-					if($parameter->enum !== \null){
+					if($parameter->enum !== null){
 						$enumMap[$parameter->enum->enumName] = $parameter->enum;
 						foreach($parameter->enum->enumValues as $str){
-							$enumValuesMap[$str] = \true;
+							$enumValuesMap[$str] = true;
 						}
 					}
 
-					if($parameter->postfix !== \null){
-						$postfixesMap[$parameter->postfix] = \true;
+					if($parameter->postfix !== null){
+						$postfixesMap[$parameter->postfix] = true;
 					}
 				}
 			}
 		}
 
 		$this->enumValues = \array_map('strval', \array_keys($enumValuesMap)); //stupid PHP key casting D:
-		$this->putUnsignedVarInt($this->enumValuesCount = \count($this->enumValues));
+		$this->putUnsignedVarInt($this->enumValuesCount = count($this->enumValues));
 		foreach($this->enumValues as $enumValue){
 			$this->putString($enumValue);
 		}
 
 		$this->postfixes = \array_map('strval', \array_keys($postfixesMap));
-		$this->putUnsignedVarInt(\count($this->postfixes));
+		$this->putUnsignedVarInt(count($this->postfixes));
 		foreach($this->postfixes as $postfix){
 			$this->putString($postfix);
 		}
 
 		$this->enums = \array_values($enumMap);
 		$this->enumMap = \array_flip(\array_keys($enumMap));
-		$this->putUnsignedVarInt(\count($this->enums));
+		$this->putUnsignedVarInt(count($this->enums));
 		foreach($this->enums as $enum){
 			$this->putEnum($enum);
 		}
 
-		$this->putUnsignedVarInt(\count($this->commandData));
+		$this->putUnsignedVarInt(count($this->commandData));
 		foreach($this->commandData as $data){
 			$this->putCommandData($data);
 		}

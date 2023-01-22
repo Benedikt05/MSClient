@@ -32,12 +32,12 @@ class DisconnectPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::DISCONNECT_PACKET;
 
 	/** @var bool */
-	public $hideDisconnectionScreen = \false;
+	public $hideDisconnectionScreen = false;
 	/** @var string */
 	public $message;
 
 	public function canBeSentBeforeLogin() : bool{
-		return \true;
+		return true;
 	}
 
 	protected function decodePayload(){

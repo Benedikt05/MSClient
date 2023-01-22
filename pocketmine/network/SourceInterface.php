@@ -49,7 +49,7 @@ interface SourceInterface{
 	 *
 	 * @return int|null
 	 */
-	public function putPacket(Player $player, DataPacket $packet, bool $needACK = \false, bool $immediate = \true);
+	public function putPacket(Player $player, DataPacket $packet, bool $needACK = false, bool $immediate = true);
 
 	/**
 	 * Terminates the connection

@@ -39,7 +39,7 @@ class BlockPickRequestPacket extends DataPacket{
 	/** @var int */
 	public $blockZ;
 	/** @var bool */
-	public $addUserData = \false;
+	public $addUserData = false;
 	/** @var int */
 	public $hotbarSlot;
 

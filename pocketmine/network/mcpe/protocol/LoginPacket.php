@@ -66,14 +66,14 @@ class LoginPacket extends DataPacket{
 	 *
 	 * @var bool
 	 */
-	public $skipVerification = \false;
+	public $skipVerification = false;
 
 	public function canBeSentBeforeLogin() : bool{
-		return \true;
+		return true;
 	}
 
 	public function mayHaveUnreadBytes() : bool{
-		return $this->protocol !== \null and $this->protocol !== ProtocolInfo::CURRENT_PROTOCOL;
+		return $this->protocol !== null and $this->protocol !== ProtocolInfo::CURRENT_PROTOCOL;
 	}
 
 	protected function decodePayload(){
@@ -100,7 +100,7 @@ class LoginPacket extends DataPacket{
 	protected function decodeConnectionRequest() : void{
 		$buffer = new BinaryStream($this->getString());
 
-		$this->chainData = \json_decode($buffer->get($buffer->getLInt()), \true);
+		$this->chainData = \json_decode($buffer->get($buffer->getLInt()), true);
 		foreach($this->chainData["chain"] as $chain){
 			$webtoken = Utils::decodeJWT($chain);
 			if(isset($webtoken["extraData"])){
@@ -123,10 +123,10 @@ class LoginPacket extends DataPacket{
 		$this->clientDataJwt = $buffer->get($buffer->getLInt());
 		$this->clientData = Utils::decodeJWT($this->clientDataJwt);
 
-		$this->clientId = $this->clientData["ClientRandomId"] ?? \null;
-		$this->serverAddress = $this->clientData["ServerAddress"] ?? \null;
+		$this->clientId = $this->clientData["ClientRandomId"] ?? null;
+		$this->serverAddress = $this->clientData["ServerAddress"] ?? null;
 
-		$this->locale = $this->clientData["LanguageCode"] ?? \null;
+		$this->locale = $this->clientData["LanguageCode"] ?? null;
 	}
 
 	public function encodePayload(){

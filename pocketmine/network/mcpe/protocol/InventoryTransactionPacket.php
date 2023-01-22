@@ -55,7 +55,7 @@ class InventoryTransactionPacket extends DataPacket{
 	 * NOTE: THIS FIELD DOES NOT EXIST IN THE PROTOCOL, it's merely used for convenience for PocketMine-MP to easily
 	 * determine whether we're doing a crafting transaction.
 	 */
-	public $isCraftingPart = \false;
+	public $isCraftingPart = false;
 
 	/** @var NetworkInventoryAction[] */
 	public $actions = [];
@@ -108,7 +108,7 @@ class InventoryTransactionPacket extends DataPacket{
 	public function encodePayload(){
 		$this->putUnsignedVarInt($this->transactionType);
 
-		$this->putUnsignedVarInt(\count($this->actions));
+		$this->putUnsignedVarInt(count($this->actions));
 		foreach($this->actions as $action){
 			$action->write($this);
 		}

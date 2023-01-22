@@ -70,12 +70,12 @@ class CraftingEventPacket extends DataPacket{
 		$this->putVarInt($this->type);
 		$this->putUUID($this->id);
 
-		$this->putUnsignedVarInt(\count($this->input));
+		$this->putUnsignedVarInt(count($this->input));
 		foreach($this->input as $item){
 			$this->putSlot($item);
 		}
 
-		$this->putUnsignedVarInt(\count($this->output));
+		$this->putUnsignedVarInt(count($this->output));
 		foreach($this->output as $item){
 			$this->putSlot($item);
 		}

@@ -43,9 +43,9 @@ class MoveEntityPacket extends DataPacket{
 	/** @var float */
 	public $pitch;
 	/** @var bool */
-	public $onGround = \false;
+	public $onGround = false;
 	/** @var bool */
-	public $teleported = \false;
+	public $teleported = false;
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();

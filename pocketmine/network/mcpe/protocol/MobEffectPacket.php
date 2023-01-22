@@ -44,7 +44,7 @@ class MobEffectPacket extends DataPacket{
 	/** @var int */
 	public $amplifier = 0;
 	/** @var bool */
-	public $particles = \true;
+	public $particles = true;
 	/** @var int */
 	public $duration = 0;
 

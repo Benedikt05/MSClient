@@ -41,7 +41,7 @@ abstract class DataPacket extends BinaryStream{
 	public const NETWORK_ID = 0;
 
 	/** @var bool */
-	public $isEncoded = \false;
+	public $isEncoded = false;
 
 	/** @var int */
 	public $extraByte1 = 0;
@@ -57,11 +57,11 @@ abstract class DataPacket extends BinaryStream{
 	}
 
 	public function canBeBatched() : bool{
-		return \true;
+		return true;
 	}
 
 	public function canBeSentBeforeLogin() : bool{
-		return \false;
+		return false;
 	}
 
 	/**
@@ -69,7 +69,7 @@ abstract class DataPacket extends BinaryStream{
 	 * @return bool
 	 */
 	public function mayHaveUnreadBytes() : bool{
-		return \false;
+		return false;
 	}
 
 	public function decode(){
@@ -98,7 +98,7 @@ abstract class DataPacket extends BinaryStream{
 		$this->reset();
 		$this->encodeHeader();
 		$this->encodePayload();
-		$this->isEncoded = \true;
+		$this->isEncoded = true;
 	}
 
 	protected function encodeHeader(){
@@ -128,8 +128,8 @@ abstract class DataPacket extends BinaryStream{
 	abstract public function handle(NetworkSession $session) : bool;
 
 	public function clean(){
-		$this->buffer = \null;
-		$this->isEncoded = \false;
+		$this->buffer = null;
+		$this->isEncoded = false;
 		$this->offset = 0;
 		return $this;
 	}
@@ -200,13 +200,13 @@ abstract class DataPacket extends BinaryStream{
 		$this->putLFloat($vector->z);
 	}
 
-	public function getEntityMetadata(bool $types = \true) : array{
+	public function getEntityMetadata(bool $types = true) : array{
 		$count = $this->getUnsignedVarInt();
 		$data = [];
 		for($i = 0; $i < $count; ++$i){
 			$key = $this->getUnsignedVarInt();
 			$type = $this->getUnsignedVarInt();
-			$value = \null;
+			$value = null;
 			switch($type){
 				case Entity::DATA_TYPE_BYTE:
 					$value = (\ord($this->get(1)));
@@ -245,7 +245,7 @@ abstract class DataPacket extends BinaryStream{
 				default:
 					$value = [];
 			}
-			if($types === \true){
+			if($types === true){
 				$data[$key] = [$type, $value];
 			}else{
 				$data[$key] = $value;
@@ -261,7 +261,7 @@ abstract class DataPacket extends BinaryStream{
 	 * @param array $metadata
 	 */
 	public function putEntityMetadata(array $metadata){
-		$this->putUnsignedVarInt(\count($metadata));
+		$this->putUnsignedVarInt(count($metadata));
 		foreach($metadata as $key => $d){
 			$this->putUnsignedVarInt($key); //data key
 			$this->putUnsignedVarInt($d[0]); //data type
@@ -317,7 +317,7 @@ abstract class DataPacket extends BinaryStream{
 			$name = $this->getString();
 
 			$attr = Attribute::getAttributeByName($name);
-			if($attr !== \null){
+			if($attr !== null){
 				$attr->setMinValue($min);
 				$attr->setMaxValue($max);
 				$attr->setValue($current);
@@ -337,7 +337,7 @@ abstract class DataPacket extends BinaryStream{
 	 * @param Attribute[] ...$attributes
 	 */
 	public function putAttributeList(Attribute ...$attributes){
-		$this->putUnsignedVarInt(\count($attributes));
+		$this->putUnsignedVarInt(count($attributes));
 		foreach($attributes as $attribute){
 			($this->buffer .= (\pack("g", $attribute->getMinValue())));
 			($this->buffer .= (\pack("g", $attribute->getMaxValue())));
@@ -478,7 +478,7 @@ abstract class DataPacket extends BinaryStream{
 		for($i = 0; $i < $count; ++$i){
 			$name = $this->getString();
 			$type = $this->getUnsignedVarInt();
-			$value = \null;
+			$value = null;
 			switch($type){
 				case 1:
 					$value = (($this->get(1) !== "\x00"));
@@ -504,7 +504,7 @@ abstract class DataPacket extends BinaryStream{
 	 * @param array $rules
 	 */
 	public function putGameRules(array $rules){
-		$this->putUnsignedVarInt(\count($rules));
+		$this->putUnsignedVarInt(count($rules));
 		foreach($rules as $name => $rule){
 			$this->putString($name);
 			$this->putUnsignedVarInt($rule[0]);

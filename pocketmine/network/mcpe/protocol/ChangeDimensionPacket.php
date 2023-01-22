@@ -37,7 +37,7 @@ class ChangeDimensionPacket extends DataPacket{
 	/** @var Vector3 */
 	public $position;
 	/** @var bool */
-	public $respawn = \false;
+	public $respawn = false;
 
 	protected function decodePayload(){
 		$this->dimension = $this->getVarInt();

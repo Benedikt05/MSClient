@@ -50,7 +50,7 @@ class MovePlayerPacket extends DataPacket{
 	/** @var int */
 	public $mode = self::MODE_NORMAL;
 	/** @var bool */
-	public $onGround = \false; //TODO
+	public $onGround = false; //TODO
 	/** @var int */
 	public $ridingEid = 0;
 	/** @var int */

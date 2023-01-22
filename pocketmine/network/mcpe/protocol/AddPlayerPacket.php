@@ -39,7 +39,7 @@ class AddPlayerPacket extends DataPacket{
 	/** @var string */
 	public $username;
 	/** @var int|null */
-	public $entityUniqueId = \null; //TODO
+	public $entityUniqueId = null; //TODO
 	/** @var int */
 	public $entityRuntimeId;
 	/** @var Vector3 */
@@ -51,7 +51,7 @@ class AddPlayerPacket extends DataPacket{
 	/** @var float */
 	public $yaw = 0.0;
 	/** @var float|null */
-	public $headYaw = \null; //TODO
+	public $headYaw = null; //TODO
 	/** @var Item */
 	public $item;
 	/** @var array */
@@ -117,7 +117,7 @@ class AddPlayerPacket extends DataPacket{
 
 		($this->buffer .= (\pack("VV", $this->long1 & 0xFFFFFFFF, $this->long1 >> 32)));
 
-		$this->putUnsignedVarInt(\count($this->links));
+		$this->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
 			$this->putEntityLink($link);
 		}

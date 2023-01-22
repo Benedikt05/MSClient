@@ -44,7 +44,7 @@ class TextPacket extends DataPacket{
 	/** @var int */
 	public $type;
 	/** @var bool */
-	public $needsTranslation = \false;
+	public $needsTranslation = false;
 	/** @var string */
 	public $source;
 	/** @var string */
@@ -102,7 +102,7 @@ class TextPacket extends DataPacket{
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
 				$this->putString($this->message);
-				$this->putUnsignedVarInt(\count($this->parameters));
+				$this->putUnsignedVarInt(count($this->parameters));
 				foreach($this->parameters as $p){
 					$this->putString($p);
 				}

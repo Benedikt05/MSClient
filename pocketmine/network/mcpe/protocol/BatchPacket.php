@@ -38,11 +38,11 @@ class BatchPacket extends DataPacket{
 	protected $compressionLevel = 7;
 
 	public function canBeBatched() : bool{
-		return \false;
+		return false;
 	}
 
 	public function canBeSentBeforeLogin() : bool{
-		return \true;
+		return true;
 	}
 
 	protected function decodeHeader(){
@@ -116,7 +116,7 @@ class BatchPacket extends DataPacket{
 
 	public function handle(NetworkSession $session) : bool{
 		if($this->payload === ""){
-			return \false;
+			return false;
 		}
 
 		foreach($this->getPackets() as $buf){
@@ -130,7 +130,7 @@ class BatchPacket extends DataPacket{
 			$session->handleDataPacket($pk);
 		}
 
-		return \true;
+		return true;
 	}
 
 }

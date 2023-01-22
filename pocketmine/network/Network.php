@@ -163,7 +163,7 @@ class Network{
 	 * @param int    $port
 	 * @param string $payload
 	 */
-	public function sendPacket(string $address, int $port, string $payload){
+	public function sendPacket(string $address, int $port, string $payload) : void{
 		foreach($this->advancedInterfaces as $interface){
 			$interface->sendRawPacket($address, $port, $payload);
 		}
@@ -175,13 +175,13 @@ class Network{
 	 * @param string $address
 	 * @param int    $timeout
 	 */
-	public function blockAddress(string $address, int $timeout = 300){
+	public function blockAddress(string $address, int $timeout = 300) : void{
 		foreach($this->advancedInterfaces as $interface){
 			$interface->blockAddress($address, $timeout);
 		}
 	}
 
-	public function unblockAddress(string $address){
+	public function unblockAddress(string $address) : void{
 		foreach($this->advancedInterfaces as $interface){
 			$interface->unblockAddress($address);
 		}

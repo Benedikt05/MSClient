@@ -14,10 +14,10 @@ class Skin
      * @param string|null $skinSrc
      * @param string|null $capeSrc
      */
-    function __construct(string $skinSrc = \null, string $capeSrc = \null)
+    function __construct(string $skinSrc = null, string $capeSrc = null)
     {
-        $this->data = isset($skinSrc) ? (is_file($skinSrc) ? self::getSkin($skinSrc) : \null) : \null;
-        $this->cape = isset($capeSrc) ? (is_file($capeSrc) ? self::getCape($capeSrc) : \null) : \null;
+        $this->data = isset($skinSrc) ? (is_file($skinSrc) ? self::getSkin($skinSrc) : null) : null;
+        $this->cape = isset($capeSrc) ? (is_file($capeSrc) ? self::getCape($capeSrc) : null) : null;
     }
 
     /**

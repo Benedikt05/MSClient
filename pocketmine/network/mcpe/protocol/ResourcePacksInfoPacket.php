@@ -34,7 +34,7 @@ class ResourcePacksInfoPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACKS_INFO_PACKET;
 
 	/** @var bool */
-	public $mustAccept = \false; //if true, forces client to use selected resource packs
+	public $mustAccept = false; //if true, forces client to use selected resource packs
 	/** @var ResourcePack[] */
 	public $behaviorPackEntries = [];
 	/** @var ResourcePack[] */
@@ -64,7 +64,7 @@ class ResourcePacksInfoPacket extends DataPacket{
 	public function encodePayload(){
 
 		($this->buffer .= ($this->mustAccept ? "\x01" : "\x00"));
-		($this->buffer .= (\pack("v", \count($this->behaviorPackEntries))));
+		($this->buffer .= (\pack("v", count($this->behaviorPackEntries))));
 		foreach($this->behaviorPackEntries as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());
@@ -72,7 +72,7 @@ class ResourcePacksInfoPacket extends DataPacket{
 			$this->putString(""); //TODO
 			$this->putString(""); //TODO
 		}
-		($this->buffer .= (\pack("v", \count($this->resourcePackEntries))));
+		($this->buffer .= (\pack("v", count($this->resourcePackEntries))));
 		foreach($this->resourcePackEntries as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());

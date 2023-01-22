@@ -49,7 +49,7 @@ class ExplodePacket extends DataPacket{
 		$this->radius = (float) ($this->getVarInt() / 32);
 		$count = $this->getUnsignedVarInt();
 		for($i = 0; $i < $count; ++$i){
-			$x = $y = $z = \null;
+			$x = $y = $z = null;
 			$this->getSignedBlockPosition($x, $y, $z);
 			$this->records[$i] = new Vector3($x, $y, $z);
 		}
@@ -58,8 +58,8 @@ class ExplodePacket extends DataPacket{
 	public function encodePayload(){
 		$this->putVector3Obj($this->position);
 		$this->putVarInt((int) ($this->radius * 32));
-		$this->putUnsignedVarInt(\count($this->records));
-		if(\count($this->records) > 0){
+		$this->putUnsignedVarInt(count($this->records));
+		if(count($this->records) > 0){
 			foreach($this->records as $record){
 				$this->putSignedBlockPosition((int) $record->x, (int) $record->y, (int) $record->z);
 			}

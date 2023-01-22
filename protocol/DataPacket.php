@@ -26,6 +26,6 @@ class DataPacket extends \pocketmine\network\mcpe\protocol\DataPacket{
 
     public function handle(NetworkSession $session) : bool
     {
-        return \false;
+        return false;
     }
 }

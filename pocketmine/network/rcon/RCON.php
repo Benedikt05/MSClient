@@ -58,7 +58,7 @@ class RCON{
 		$this->clientsPerThread = (int) \max(1, $clientsPerThread);
 		$this->socket = \socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 
-		if($this->socket === \false or !@\socket_bind($this->socket, $interface, $port) or !@\socket_listen($this->socket)){
+		if($this->socket === false or !@\socket_bind($this->socket, $interface, $port) or !@\socket_listen($this->socket)){
 			throw new \RuntimeException(\trim(\socket_strerror(\socket_last_error())));
 		}
 
@@ -84,7 +84,7 @@ class RCON{
 
 	public function check(){
 		for($n = 0; $n < $this->threads; ++$n){
-			if($this->workers[$n]->isTerminated() === \true){
+			if($this->workers[$n]->isTerminated() === true){
 				$this->workers[$n] = new RCONInstance($this->socket, $this->password, $this->clientsPerThread);
 			}elseif($this->workers[$n]->isWaiting()){
 				if($this->workers[$n]->response !== ""){

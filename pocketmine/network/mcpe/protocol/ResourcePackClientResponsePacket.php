@@ -51,7 +51,7 @@ class ResourcePackClientResponsePacket extends DataPacket{
 
 	public function encodePayload(){
 		($this->buffer .= \chr($this->status));
-		($this->buffer .= (\pack("v", \count($this->packIds))));
+		($this->buffer .= (\pack("v", count($this->packIds))));
 		foreach($this->packIds as $id){
 			$this->putString($id);
 		}

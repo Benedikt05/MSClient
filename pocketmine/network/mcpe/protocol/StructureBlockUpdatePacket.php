@@ -30,7 +30,7 @@ use pocketmine\network\mcpe\NetworkSession;
 class StructureBlockUpdatePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::STRUCTURE_BLOCK_UPDATE_PACKET;
 
-	protected function decodePayload(){
+	public function decodePayload(){
 		//TODO
 	}
 

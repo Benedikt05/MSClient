@@ -101,7 +101,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleClientToServerHandshake(ClientToServerHandshakePacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handleResourcePackClientResponse(ResourcePackClientResponsePacket $packet) : bool{
@@ -113,7 +113,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 			return $this->player->chat($packet->message);
 		}
 
-		return \false;
+		return false;
 	}
 
 	public function handleMovePlayer(MovePlayerPacket $packet) : bool{
@@ -137,7 +137,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleMobArmorEquipment(MobArmorEquipmentPacket $packet) : bool{
-		return \true; //Not used
+		return true; //Not used
 	}
 
 	public function handleInteract(InteractPacket $packet) : bool{
@@ -149,7 +149,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleEntityPickRequest(EntityPickRequestPacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handlePlayerAction(PlayerActionPacket $packet) : bool{
@@ -157,7 +157,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleEntityFall(EntityFallPacket $packet) : bool{
-		return \true; //Not used
+		return true; //Not used
 	}
 
 	public function handleAnimate(AnimatePacket $packet) : bool{
@@ -169,11 +169,11 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handlePlayerHotbar(PlayerHotbarPacket $packet) : bool{
-		return \true; //this packet is useless
+		return true; //this packet is useless
 	}
 
 	public function handleCraftingEvent(CraftingEventPacket $packet) : bool{
-		return \true; //this is a broken useless packet, so we don't use it
+		return true; //this is a broken useless packet, so we don't use it
 	}
 
 	public function handleAdventureSettings(AdventureSettingsPacket $packet) : bool{
@@ -185,7 +185,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handlePlayerInput(PlayerInputPacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handleSetPlayerGameType(SetPlayerGameTypePacket $packet) : bool{
@@ -193,11 +193,11 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleSpawnExperienceOrb(SpawnExperienceOrbPacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handleMapInfoRequest(MapInfoRequestPacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handleRequestChunkRadius(RequestChunkRadiusPacket $packet) : bool{
@@ -209,11 +209,11 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleBossEvent(BossEventPacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handleShowCredits(ShowCreditsPacket $packet) : bool{
-		return \false; //TODO: handle resume
+		return false; //TODO: handle resume
 	}
 
 	public function handleCommandRequest(CommandRequestPacket $packet) : bool{
@@ -221,7 +221,7 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleCommandBlockUpdate(CommandBlockUpdatePacket $packet) : bool{
-		return \false; //TODO
+		return false; //TODO
 	}
 
 	public function handleResourcePackChunkRequest(ResourcePackChunkRequestPacket $packet) : bool{
@@ -237,10 +237,10 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	}
 
 	public function handleModalFormResponse(ModalFormResponsePacket $packet) : bool{
-		return \false; //TODO: GUI stuff
+		return false; //TODO: GUI stuff
 	}
 
 	public function handleServerSettingsRequest(ServerSettingsRequestPacket $packet) : bool{
-		return \false; //TODO: GUI stuff
+		return false; //TODO: GUI stuff
 	}
 }

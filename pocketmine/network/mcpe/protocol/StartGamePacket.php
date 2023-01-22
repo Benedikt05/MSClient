@@ -65,33 +65,33 @@ class StartGamePacket extends DataPacket{
 	/** @var int */
 	public $spawnZ;
 	/** @var bool */
-	public $hasAchievementsDisabled = \true;
+	public $hasAchievementsDisabled = true;
 	/** @var int */
 	public $time = -1;
 	/** @var bool */
-	public $eduMode = \false;
+	public $eduMode = false;
 	/** @var float */
 	public $rainLevel;
 	/** @var float */
 	public $lightningLevel;
 	/** @var bool */
-	public $isMultiplayerGame = \true;
+	public $isMultiplayerGame = true;
 	/** @var bool */
-	public $hasLANBroadcast = \true;
+	public $hasLANBroadcast = true;
 	/** @var bool */
-	public $hasXboxLiveBroadcast = \false;
+	public $hasXboxLiveBroadcast = false;
 	/** @var bool */
 	public $commandsEnabled;
 	/** @var bool */
-	public $isTexturePacksRequired = \true;
+	public $isTexturePacksRequired = true;
 	/** @var array */
 	public $gameRules = []; //TODO: implement this
 	/** @var bool */
-	public $hasBonusChestEnabled = \false;
+	public $hasBonusChestEnabled = false;
 	/** @var bool */
-	public $hasStartWithMapEnabled = \false;
+	public $hasStartWithMapEnabled = false;
 	/** @var bool */
-	public $hasTrustPlayersEnabled = \false;
+	public $hasTrustPlayersEnabled = false;
 	/** @var int */
 	public $defaultPlayerPermission = PlayerPermissions::MEMBER; //TODO
 	/** @var int */
@@ -104,7 +104,7 @@ class StartGamePacket extends DataPacket{
 	/** @var string */
 	public $premiumWorldTemplateId = "";
 	/** @var bool */
-	public $unknownBool = \false;
+	public $unknownBool = false;
 	/** @var int */
 	public $currentTick = 0;
 	/** @var int */

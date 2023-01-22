@@ -33,7 +33,7 @@ class AddItemEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ITEM_ENTITY_PACKET;
 
 	/** @var int|null */
-	public $entityUniqueId = \null; //TODO
+	public $entityUniqueId = null; //TODO
 	/** @var int */
 	public $entityRuntimeId;
 	/** @var Item */

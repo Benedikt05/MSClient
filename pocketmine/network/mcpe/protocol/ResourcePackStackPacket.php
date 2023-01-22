@@ -35,7 +35,7 @@ class ResourcePackStackPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_STACK_PACKET;
 
 	/** @var bool */
-	public $mustAccept = \false;
+	public $mustAccept = false;
 
 	/** @var ResourcePack[] */
 	public $behaviorPackStack = [];
@@ -62,14 +62,14 @@ class ResourcePackStackPacket extends DataPacket{
 	public function encodePayload(){
 		($this->buffer .= ($this->mustAccept ? "\x01" : "\x00"));
 
-		$this->putUnsignedVarInt(\count($this->behaviorPackStack));
+		$this->putUnsignedVarInt(count($this->behaviorPackStack));
 		foreach($this->behaviorPackStack as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());
 			$this->putString(""); //TODO
 		}
 
-		$this->putUnsignedVarInt(\count($this->resourcePackStack));
+		$this->putUnsignedVarInt(count($this->resourcePackStack));
 		foreach($this->resourcePackStack as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());

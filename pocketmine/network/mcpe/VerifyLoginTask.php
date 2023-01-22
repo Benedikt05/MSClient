@@ -41,13 +41,13 @@ class VerifyLoginTask extends AsyncTask{
 	 * has an invalid signature. If false, the keychain might have been tampered with.
 	 * The player will always be disconnected if this is false.
 	 */
-	private $valid = \false;
+	private $valid = false;
 	/**
 	 * @var bool
 	 * Whether the player is logged into Xbox Live. This is true if any link in the keychain is signed with the Mojang
 	 * root public key.
 	 */
-	private $authenticated = \false;
+	private $authenticated = false;
 
 
 	public function __construct(Player $player, LoginPacket $packet){
@@ -58,38 +58,38 @@ class VerifyLoginTask extends AsyncTask{
 	public function onRun(){
 		$packet = $this->packet; //Get it in a local variable to make sure it stays unserialized
 
-		$currentKey = \null;
-		$first = \true;
+		$currentKey = null;
+		$first = true;
 
 		foreach($packet->chainData["chain"] as $jwt){
 			if(!$this->validateToken($jwt, $currentKey, $first)){
 				return;
 			}
-			$first = \false;
+			$first = false;
 		}
 
 		if(!$this->validateToken($packet->clientDataJwt, $currentKey)){
 			return;
 		}
 
-		$this->valid = \true;
+		$this->valid = true;
 	}
 
-	private function validateToken(string $jwt, ?string &$currentPublicKey, bool $first = \false) : bool{
+	private function validateToken(string $jwt, ?string &$currentPublicKey, bool $first = false) : bool{
 		[$headB64, $payloadB64, $sigB64] = \explode('.', $jwt);
 
-		$headers = \json_decode(\base64_decode(\strtr($headB64, '-_', '+/'), \true), \true);
+		$headers = \json_decode(\base64_decode(\strtr($headB64, '-_', '+/'), true), true);
 
-		if($currentPublicKey === \null){
+		if($currentPublicKey === null){
 			if(!$first){
-				return \false; //we should have a key but the last link didn't have one
+				return false; //we should have a key but the last link didn't have one
 			}
 
 			//First link, check that it is self-signed
 			$currentPublicKey = $headers["x5u"];
 		}
 
-		$plainSignature = \base64_decode(\strtr($sigB64, '-_', '+/'), \true);
+		$plainSignature = \base64_decode(\strtr($sigB64, '-_', '+/'), true);
 
 		//OpenSSL wants a DER-encoded signature, so we extract R and S from the plain signature and crudely serialize it.
 
@@ -112,29 +112,29 @@ class VerifyLoginTask extends AsyncTask{
 		//0x30 = Sequence ASN.1 tag
 		$derSignature = "\x30" . \chr(\strlen($sequence)) . $sequence;
 
-		$v = \openssl_verify("$headB64.$payloadB64", $derSignature, "-----BEGIN PUBLIC KEY-----\n" . \wordwrap($currentPublicKey, 64, "\n", \true) . "\n-----END PUBLIC KEY-----\n", OPENSSL_ALGO_SHA384);
+		$v = \openssl_verify("$headB64.$payloadB64", $derSignature, "-----BEGIN PUBLIC KEY-----\n" . \wordwrap($currentPublicKey, 64, "\n", true) . "\n-----END PUBLIC KEY-----\n", OPENSSL_ALGO_SHA384);
 		if($v !== 1){
-			return \false; //bad signature, it might have been tampered with
+			return false; //bad signature, it might have been tampered with
 		}
 
 		if($currentPublicKey === self::MOJANG_ROOT_PUBLIC_KEY){
-			$this->authenticated = \true; //we're signed into xbox live
+			$this->authenticated = true; //we're signed into xbox live
 		}
 
-		$claims = \json_decode(\base64_decode(\strtr($payloadB64, '-_', '+/'), \true), \true);
+		$claims = \json_decode(\base64_decode(\strtr($payloadB64, '-_', '+/'), true), true);
 
 		$time = \time();
 		if(isset($claims["nbf"]) and $claims["nbf"] > $time){
-			return \false; //token can't be used yet
+			return false; //token can't be used yet
 		}
 
 		if(isset($claims["exp"]) and $claims["exp"] < $time){
-			return \false; //token has expired
+			return false; //token has expired
 		}
 
-		$currentPublicKey = $claims["identityPublicKey"] ?? \null; //if there are further links, the next link should be signed with this
+		$currentPublicKey = $claims["identityPublicKey"] ?? null; //if there are further links, the next link should be signed with this
 
-		return \true;
+		return true;
 	}
 
 	public function onCompletion(Server $server){

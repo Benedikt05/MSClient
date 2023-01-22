@@ -32,7 +32,7 @@ class AddPaintingPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
 
 	/** @var int|null */
-	public $entityUniqueId = \null; //TODO
+	public $entityUniqueId = null; //TODO
 	/** @var int */
 	public $entityRuntimeId;
 	/** @var int */

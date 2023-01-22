@@ -41,7 +41,7 @@ class PurchaseReceiptPacket extends DataPacket{
 	}
 
 	public function encodePayload(){
-		$this->putUnsignedVarInt(\count($this->entries));
+		$this->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
 			$this->putString($entry);
 		}

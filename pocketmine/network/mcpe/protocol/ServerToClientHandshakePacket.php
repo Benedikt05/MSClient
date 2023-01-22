@@ -38,7 +38,7 @@ class ServerToClientHandshakePacket extends DataPacket{
 	public $jwt;
 
 	public function canBeSentBeforeLogin() : bool{
-		return \true;
+		return true;
 	}
 
 	protected function decodePayload(){

@@ -61,7 +61,7 @@ class QueryHandler{
 		$ev = $this->server->getQueryInformation();
 		$this->longData = $ev->getLongQuery();
 		$this->shortData = $ev->getShortQuery();
-		$this->timeout = \microtime(\true) + $ev->getTimeout();
+		$this->timeout = \microtime(true) + $ev->getTimeout();
 	}
 
 	public function regenerateToken(){
@@ -70,7 +70,7 @@ class QueryHandler{
 	}
 
 	public static function getTokenString($token, $salt){
-		return (\unpack("N", \substr(\hash("sha512", $salt . ":" . $token, \true), 7, 4))[1] << 32 >> 32);
+		return (\unpack("N", \substr(\hash("sha512", $salt . ":" . $token, true), 7, 4))[1] << 32 >> 32);
 	}
 
 	public function handle($address, $port, $packet){
@@ -96,7 +96,7 @@ class QueryHandler{
 				$reply = \chr(self::STATISTICS);
 				$reply .= (\pack("N", $sessionID));
 
-				if($this->timeout < \microtime(\true)){
+				if($this->timeout < \microtime(true)){
 					$this->regenerateInfo();
 				}
 

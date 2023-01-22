@@ -72,7 +72,7 @@ class PlayerListPacket extends DataPacket{
 
 	public function encodePayload(){
 		($this->buffer .= \chr($this->type));
-		$this->putUnsignedVarInt(\count($this->entries));
+		$this->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
 			if($this->type === self::TYPE_ADD){
 				$this->putUUID($entry->uuid);

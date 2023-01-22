@@ -32,7 +32,7 @@ class ClientToServerHandshakePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENT_TO_SERVER_HANDSHAKE_PACKET;
 
 	public function canBeSentBeforeLogin() : bool{
-		return \true;
+		return true;
 	}
 
 	protected function decodePayload(){

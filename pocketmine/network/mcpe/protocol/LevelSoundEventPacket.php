@@ -207,11 +207,11 @@ class LevelSoundEventPacket extends DataPacket{
 	/** @var int */
 	public $pitch = 1;
 	/** @var bool */
-	public $unknownBool = \false;
+	public $unknownBool = false;
 	/** @var bool */
-	public $disableRelativeVolume = \false;
+	public $disableRelativeVolume = false;
 
-	protected function decodePayload(){
+	public function decodePayload(){
 		$this->sound = (\ord($this->get(1)));
 		$this->position = $this->getVector3Obj();
 		$this->extraData = $this->getVarInt();

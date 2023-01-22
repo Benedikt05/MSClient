@@ -34,7 +34,7 @@ class AddEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ENTITY_PACKET;
 
 	/** @var int|null */
-	public $entityUniqueId = \null; //TODO
+	public $entityUniqueId = null; //TODO
 	/** @var int */
 	public $entityRuntimeId;
 	/** @var int */
@@ -72,7 +72,7 @@ class AddEntityPacket extends DataPacket{
 			$max = ((\unpack("g", $this->get(4))[1]));
 			$attr = Attribute::getAttributeByName($name);
 
-			if($attr !== \null){
+			if($attr !== null){
 				$attr->setMinValue($min);
 				$attr->setMaxValue($max);
 				$attr->setValue($current);
@@ -98,7 +98,7 @@ class AddEntityPacket extends DataPacket{
 		($this->buffer .= (\pack("g", $this->pitch)));
 		($this->buffer .= (\pack("g", $this->yaw)));
 
-		$this->putUnsignedVarInt(\count($this->attributes));
+		$this->putUnsignedVarInt(count($this->attributes));
 		foreach($this->attributes as $attribute){
 			$this->putString($attribute->getName());
 			($this->buffer .= (\pack("g", $attribute->getMinValue())));
@@ -107,7 +107,7 @@ class AddEntityPacket extends DataPacket{
 		}
 
 		$this->putEntityMetadata($this->metadata);
-		$this->putUnsignedVarInt(\count($this->links));
+		$this->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
 			$this->putEntityLink($link);
 		}

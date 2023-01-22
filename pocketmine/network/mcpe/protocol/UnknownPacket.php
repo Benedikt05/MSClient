@@ -54,6 +54,6 @@ class UnknownPacket extends DataPacket{
 	}
 
 	public function handle(NetworkSession $session) : bool{
-		return \false;
+		return false;
 	}
 }

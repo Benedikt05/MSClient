@@ -46,7 +46,7 @@ class InventoryContentPacket extends DataPacket{
 
 	public function encodePayload(){
 		$this->putUnsignedVarInt($this->windowId);
-		$this->putUnsignedVarInt(\count($this->items));
+		$this->putUnsignedVarInt(count($this->items));
 		foreach($this->items as $item){
 			$this->putSlot($item);
 		}

@@ -53,7 +53,7 @@ class PlayStatusPacket extends DataPacket{
 	}
 
 	public function canBeSentBeforeLogin() : bool{
-		return \true;
+		return true;
 	}
 
 	protected function encodeHeader(){
